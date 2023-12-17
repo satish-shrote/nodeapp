@@ -1,5 +1,4 @@
 FROM node:lts-alpine
-LABEL satish-shrote
 RUN mkdir /app
 WORKDIR /app
 COPY . /app
