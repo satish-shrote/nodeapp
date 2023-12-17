@@ -1,10 +1,10 @@
 pipeline {
+  agent any
   environment {
     registry = "liligogo/nodeapp"
       registryCredential = 'dockerhub'
         dockerImage = ''
     }
-  agent any
   stages {
     stage('Github Trigger jenkins') {
       steps {
