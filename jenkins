@@ -1,37 +1,36 @@
 pipeline {
   agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
   environment {
-    registry = "liligogo/nodeapp"
-      registryCredential = 'dockerhub'
-        dockerImage = ''
-    }
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+  }
   stages {
     stage('Github Trigger jenkins') {
       steps {
         checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/satish-shrote/nodeapp.git']])
             }
         }
-
-    stage('Building our image') {
+    stage('Build') {
       steps {
-        script {
-          dockerimage = docker.build registry + ":$BUILD_NUMBER"
-	}
+        sh 'docker build -t liligogo/liligogo .'
       }
     }
-    
-    stage('Push our image') {
+    stage('Login') {
       steps {
-        script { 
-           docker.withRegistry( '', registryCredential ) { 
-             dockerImage.push() 
-      	   }
-     	 }
-       }
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+      }
     }
-    stage('Cleaning up') { 
-      steps { 
-        sh "docker rmi $registry:$BUILD_NUMBER" 
+    stage('Push') {
+      steps {
+        sh 'docker push liligogo/liligogo'
+      }
+    }
+  }
+  post {
+    always {
+      sh 'docker logout'
     }
   }
 }
