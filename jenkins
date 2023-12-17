@@ -1,0 +1,39 @@
+pipeline {
+  agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhubcredentials')
+  }
+  stages {
+      stage('Github Trigger jenkins') {
+      steps {
+        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/satish-shrote/nodeapp.git']])
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'sudo docker build -t liligogo/liligogo:$BUILD_NUMBER .'
+        echo 'Build Image Completed'  
+      }
+    }
+    stage('Login') {
+      steps {
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        echo 'Login Completed'
+      }
+    }
+    stage('Push') {
+      steps {
+        sh 'sudo docker push liligogo/liligogo:$BUILD_NUMBER'
+        echo 'Push Image Completed' 
+      }
+    }
+  }
+  post {
+    always {
+      sh 'docker logout'
+    }
+  }
+}
