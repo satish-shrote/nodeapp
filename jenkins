@@ -14,7 +14,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'sudo docker build -t liligogo/liligogo:$BUILD_NUMBER .'
+        sh 'sudo docker build -t liligogo/liligogo/node:$BUILD_NUMBER .'
         echo 'Build Image Completed'  
       }
     }
