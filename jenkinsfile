@@ -5,35 +5,44 @@ pipeline {
   }
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhubcredentials')
+    PROJECT_ID = 'cobalt-compound-408209'
+    CLUSTER_NAME = 'cobalt-compound-408209-gke'
+    LOCATION = 'us-east1'
+    CREDENTIALS_ID = 'kubernetes'
   }
   stages {
       stage('Github Trigger jenkins') {
       steps {
-        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/satish-shrote/nodeapp.git']])
+        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/satish-shrote/nodeapp']])
       }
     }
     stage('Build') {
       steps {
-        sh 'sudo docker build -t liligogo/liligogo:$BUILD_NUMBER .'
+        sh 'docker build -t liligogo/liligogo:$BUILD_NUMBER .'
         echo 'Build Image Completed'  
       }
     }
     stage('Login') {
       steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
         echo 'Login Completed'
       }
     }
     stage('Push') {
       steps {
-        sh 'sudo docker push liligogo/liligogo:$BUILD_NUMBER'
+        sh 'docker push liligogo/liligogo:$BUILD_NUMBER'
         echo 'Push Image Completed' 
       }
     }
-  }
-  post {
-    always {
-      sh 'docker logout'
-    }
+    stage('Deploy to GKE') { 
+      steps{ 
+        echo "Deployment started ..."
+        sh 'ls -ltr'
+        sh 'pwd'
+        sh "sed -i 's/tagversion/${env.BUILD_ID}/g' nodeapp-depl-svc.yaml"
+                   step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'nodeapp-depl-svc.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+        echo "Deployment Finished ..."
+            }
+        }
   }
 }
