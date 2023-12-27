@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nft-bridge
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: nft-bridge

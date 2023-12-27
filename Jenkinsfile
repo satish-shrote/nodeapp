@@ -18,7 +18,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'docker build -t liligogo/liligogo:$BUILD_NUMBER .'
+        sh 'docker build -t liligogo/liligogo/nft-bridge:$BUILD_NUMBER .'
         echo 'Build Image Completed'  
       }
     }
@@ -30,7 +30,7 @@ pipeline {
     }
     stage('Push') {
       steps {
-        sh 'docker push liligogo/liligogo:$BUILD_NUMBER'
+        sh 'docker push liligogo/liligogo/nft-bridge:$BUILD_NUMBER'
         echo 'Push Image Completed' 
       }
     }
@@ -39,7 +39,7 @@ pipeline {
         echo "Deployment started ..."
         sh 'ls -ltr'
         sh 'pwd'
-        sh "sed -i 's/liligogo/liligogo:$BUILD_NUMBER/g' nodeapp-depl-svc.yaml"
+        sh "sed -i 's/liligogo/liligogo/nft-bridge:$BUILD_NUMBER/g' nodeapp-depl-svc.yaml"
                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'nodeapp-depl-svc.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
         echo "Deployment Finished ..."
             }
