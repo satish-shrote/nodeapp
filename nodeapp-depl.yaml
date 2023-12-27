@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nft-bridge
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: nft-bridge
@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: liligogo/liligogo:37
+        image: liligogo/liligogo:latest
         ports:
         - containerPort: 3001
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nft-bridge-service
+  name: nft-bridge-svc
 spec:
   type: LoadBalancer
   selector:
