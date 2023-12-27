@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: liligogo/liligogo/nft-bridge:$BUILD_NUMBER
+        image: liligogo/liligogo:$BUILD_NUMBER
         ports:
         - containerPort: 3001
 ---
@@ -31,4 +31,4 @@ spec:
   ports:
   - port: 8080
     targetPort: 3001
-    [Iprotocol: TCP
+    protocol: TCP
