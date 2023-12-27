@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: liligogo/liligogo:$BUILD_NUMBER
+        image: liligogo/liligogo:23
         ports:
         - containerPort: 3001
 ---
