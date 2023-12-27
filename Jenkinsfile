@@ -18,7 +18,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'docker build -t liligogo/liligogo/nft-bridge:$BUILD_NUMBER .'
+        sh 'docker build -t liligogo/liligogo:$BUILD_NUMBER .'
         echo 'Build Image Completed'  
       }
     }
