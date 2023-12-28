@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: liligogo/liligogo/nft-bridge:latest
+        image: liligogo/liligogo:latest
 	imagePullPolicy: Always
         ports:
         - containerPort: 3001
