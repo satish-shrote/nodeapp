@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
       - name: nodeapp-container
-        image: liligogo/liligogo:latest
-	imagePullPolicy: Always
+        image: liligogo/liligogo:nodeapp:latest
         ports:
         - containerPort: 3001
 ---
