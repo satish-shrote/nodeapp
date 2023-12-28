@@ -18,7 +18,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'docker build -t liligogo/liligogo:nodeapp:$BUILD_NUMBER .'
+        sh 'docker build -t liligogo/liligogo:$BUILD_NUMBER .'
         echo 'Build Image Completed'  
       }
     }
@@ -30,7 +30,7 @@ pipeline {
     }
     stage('Push') {
       steps {
-        sh 'docker push liligogo/liligogo:nodeapp:$BUILD_NUMBER'
+        sh 'docker push liligogo/liligogo:$BUILD_NUMBER'
         echo 'Push Image Completed' 
       }
     }
@@ -39,7 +39,7 @@ pipeline {
         echo "Deployment started ..."
         sh 'ls -ltr'
         sh 'pwd'
-        sh "sed -i 's/liligogo/liligogo:nodeapp:latest/g' nodeapp-depl.yaml"
+        sh "sed -i 's/liligogo/liligogo:latest/g' nodeapp-depl.yaml"
                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'nodeapp-depl.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
         echo "Deployment Finished ..."
             }
