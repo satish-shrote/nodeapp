@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodeapp-depl
+  name: nft-bridge
   labels:
     app: nft-bridge
 spec:
@@ -13,21 +13,27 @@ spec:
     metadata:
       labels:
         app: nft-bridge
+        tier: nft-bridge
     spec:
       containers:
-      - name: nodeapp-container
-        image: liligogo/liligogo:latest
+      - name: nft-bridge
+        image: liligogo/liligogo/nft-bridge:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3001
+          name: nft-bridge
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nft-bridge-svc
+  name: nft-bridge
+  labels:
+    app: nft-bridge
 spec:
   type: LoadBalancer
   selector:
     app: nft-bridge
+    tier: nft-bridge
   ports:
   - port: 8080
     targetPort: 3001
