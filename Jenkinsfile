@@ -39,7 +39,7 @@ pipeline {
         echo "Deployment started ..."
         sh 'ls -ltr'
         sh 'pwd'
-        sh "sed -i 's/nodeapp:$BUILD_NUMBER/g' nodeapp-depl.yaml"
+        sh "sed -i 's/liligogo/nodeapp:$BUILD_NUMBER/g' nodeapp-depl.yaml"
                    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'nodeapp-depl.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
         echo "Deployment Finished ..."
             }
